@@ -7,6 +7,5 @@ Kubernetes es una plataforma portátil, extensible y de código abierto  para ge
 
 El nombre Kubernetes se origina del griego, que significa timonel o  piloto. Google abrió el proyecto Kubernetes en 2014. Kubernetes combina  más de 15 años de experiencia de Google ejecutando cargas de trabajo de  producción a escala con las mejores ideas y prácticas de la comunidad.
 
-
 ![](https://d33wubrfki0l68.cloudfront.net/7016517375d10c702489167e704dcb99e570df85/7bb53/images/docs/components-of-kubernetes.png)
 
