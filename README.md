@@ -10,7 +10,9 @@ Kubernetes es una plataforma portable y extensible de código abierto para admin
 
 Google liberó el proyecto Kubernetes en el año 2014. Kubernetes se basa en la experiencia de Google corriendo aplicaciones en producción a gran escalapor década y media, junto a las mejores ideas y prácticas de la comunidad.
 
-![](https://d33wubrfki0l68.cloudfront.net/e298a92e2454520dddefc3b4df28ad68f9b91c6f/70d52/images/docs/pre-ccm-arch.png)
+![](https://cdn.icon-icons.com/icons2/2699/PNG/512/kubernetes_logo_icon_168360.png)
+
+### ¿Por qué utilizar contenedores?
 
 Kubernetes ofrce un entorno de administración centrado en contenedores.
 
@@ -32,5 +34,31 @@ En resumen, los beneficios de usar contenedores incluyen:
 - **Microservicios distribuidos, elásticos, liberados y débilmente acoplados:** Las aplicaciones se separan en piezas pequeñas e independientes que pueden ser desplegadas y administradas de forma dinámica, y no como una aplicación monolítica que opera en una sola máquina de gran capacidad.
 - **Aislamiento de recursos:** Hace el rendimiento de la aplicación más predecible.
 - **Utilización de recursos:** Permite mayor eficiencia y densidad.
+
+## Arquitectura de Kubernetes
+Kubernetes distribuye los contenedores en **pods**, así estos pueden estar en varios **nodos**. A su vez, estos nodos forman un **clúster**, completando así la estructura que tiene Kubernetes.
+
+### Pods
+En Kubernetes los contenedores se agrupan en pods, por lo que todos los contenedores que se ejecuten en un pod lo harán en la misma máquina o host, ya que no se pueden separar.
+
+Se agrupan en el mismo pod contenedores que usan y necesitan los mismos recursos. De esta forma da la sensación de que forman un host lógico dentro del clúster, por lo que es más fácil entender que el pod tendrá una dirección IP compartida por los contenedores que lo formarán. Además, todos los pods se alcanzarán entre ellos, dado que compartirán la misma red privada.
+
+### Nodos
+Las aplicaciones que se ejecuten en el clúster (conjunto de nodos), realmente se están ejecutando en los nodos, siendo los contenedores distribuidos por Kubernetes de manera automática.
+
+Estos nodos pueden ser tanto un ordenador, como una máquina virtual o incluso una máquina en la nube. Estos están administrados por un componente llamado Kubelet, que veremos más adelante.
+
+Los nodos pueden ser de dos tipos: los nodos trabajadores  y los nodos maestros. La diferencia que existe es que los nodos maestros Kubernetes los utiliza para labores de administración y planificación de los pods que se ejecutan en los nodos trabajadores del clúster. Esta administración y control se realiza a través de diferentes controladores que veremos más adelante.
+
+Normalmente se dispone de un único nodo máster, pero en función de la carga de trabajo, podríamos disponer de varios nodos máster, haciendo así el sistema más resistente ante fallos.
+
+### Clúster
+Un clúster se forma por los dos elementos explicados anteriormente. Kubernetes coordina contenedores en un sistema formado por varios nodos, haciendo que todo funcione como una sola unidad regida por el nodo máster, logrando que las aplicaciones no estén vinculadas a una sola máquina o host. Esto evita que tengamos que instalar una aplicación directamente en una sola máquina, ya que la realizamos sobre el clúster.
+
+![](https://d33wubrfki0l68.cloudfront.net/e298a92e2454520dddefc3b4df28ad68f9b91c6f/70d52/images/docs/pre-ccm-arch.png)
+
+En la imagen que se muestra arriba, se ve la estructura de un clúster (en este caso conectado a la nube). Como mínimo un clúster tiene que estar formado por tres nodos, un máster y dos trabajadores, a excepción de Minikube que veremos más adelante ya que usa uno para todo.
+
+Por último, la comunicación de los nodos con el máster y del usuario con el clúster, se hace a través de la API de Kubernetes.
 
 ## Componentes de Kubernetes
