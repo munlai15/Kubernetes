@@ -118,6 +118,5 @@ Los complementos dotan a la estructura del clúster de funcionalidades adicional
 
 En la siguiente imagen se muestra la estructura completa de la arquitectura con los componentes en cada elemento del clúster.
 
-![](https://d33wubrfki0l68.cloudfront.net/e7b766e0175f30ae37f7e0e349b87cfe2034a1ae/3e391/images/docs/why_containers.svg)
-
+![](https://miro.medium.com/max/981/1*HXbT0c4Q5XaiCIp6y3VMvw.png)
 
