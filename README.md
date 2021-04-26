@@ -55,10 +55,69 @@ Normalmente se dispone de un único nodo máster, pero en función de la carga d
 ### Clúster
 Un clúster se forma por los dos elementos explicados anteriormente. Kubernetes coordina contenedores en un sistema formado por varios nodos, haciendo que todo funcione como una sola unidad regida por el nodo máster, logrando que las aplicaciones no estén vinculadas a una sola máquina o host. Esto evita que tengamos que instalar una aplicación directamente en una sola máquina, ya que la realizamos sobre el clúster.
 
-![](https://d33wubrfki0l68.cloudfront.net/e298a92e2454520dddefc3b4df28ad68f9b91c6f/70d52/images/docs/pre-ccm-arch.png)
-
-En la imagen que se muestra arriba, se ve la estructura de un clúster (en este caso conectado a la nube). Como mínimo un clúster tiene que estar formado por tres nodos, un máster y dos trabajadores, a excepción de Minikube que veremos más adelante ya que usa uno para todo.
-
 Por último, la comunicación de los nodos con el máster y del usuario con el clúster, se hace a través de la API de Kubernetes.
 
 ## Componentes de Kubernetes
+Para que la arquitectura descrita antes funcione correctamente, Kubernetes utiliza varios componentes en los diferentes elementos de su sistema.
+
+### Componentes del máster
+
+**Servidor de API**
+
+Sirve para acceder a la API de Kubernetes en nuestro clúster. Es el front-end del plano de control de Kubernetes, es decir, es donde llegan las peticiones al clúster. Estas pueden llegar desde un nodo o desde una petición por parte del administrador del máster, y lo redirige a los componentes que correspondan.
+
+Básicamente se encarga de preparar, validando y configurando, los datos de los objetos api que necesitamos para el clúster. También prepara la interfaz a través la cual los componentes del clúster interactúan con los demás componentes.
+
+**Etcd**
+
+Es una base de datos que guarda y almacena la configuraciñón del clúster, almacenando también información de los servicios que están disponibles.
+
+Etcd estará replicando en todos los nodos máster del clúster para asegurar una alta disponibilidad de la información. Esta información es también usada por el API serer para que los servicios desplegados en los contenedores mantengan sus características
+
+**Planificador (Scheduler)**
+
+Asigna a los nuevos pods un nodo en el que ejecutarse, es decir, se encarga de repartir los recursos disponibles en el clúster, para la ejecución de los pods tras valorar los requisitos que necesitan para desarrollar su trabajo.
+
+También es el responsable de monitorizar la utilización de recursos de cada host para asegurar que los pods no sobrepasen los recursos disponibles una vez ya estén en funcionamiento.
+
+**Gestor de controladores (Controller-manager)**
+
+Es un componente que, como su nombre indica, se encarga de gestionar los controladores de los nodos. Estos controladores son los siguientes:
+
+* Controlador de réplicas (replication controller): Se encarga de controlar la ejecución correcta de réplicas deseadas para una aplicación.
+
+* Controlador del nodo (node controller): Se encarga de controlar que los nodos pertenecientes a un clúster funcionan de manera correcta y detectar si un nodo ha dejado de fucionar.
+
+* Controlador de puntos finales (end-points controller): Gestiona los puntos finales (end-points) de los servicios desplegados.
+
+* Controlador de la nube: Es un controlador de las últimas versiones de Kubernetes que gestiona la conexión con el proveedor de servicios en la nube que se contrata para nuestro clúster.
+
+### Componentes de los nodos
+
+**Kubelet**
+
+Se ejecuta en cada nodo gestionando los pods y su contenido a través de los ficheros que describen cada pod, y juntos forman las especificaciones de un pod.
+
+Hay que tener en cuenta que Kubelet no administra contenedores que no pertenecen a Kubernetes, es decir, que no hayan sido creados por Kubernetes.
+
+**Kube-proxy**
+
+Se ejecuta en cada nodo y proporciona abstracción de servicios al realizar el reenvío de conexión. Así, cuando llega una petición de servicio a un nodo por parte de un usuario desde el exterior, a un nodo donde no se está ejecutando algún pod de la aplicaciñón que se encarga de ellos, kube-proxy se ocupa de hacer que la conexión se reencíe al nodo correcto.
+
+**cAdvisor**
+
+Se dedica a recoger información del uso de los recursos que se usan en los nodos vigilando la CPU, la memoria, sistemas de ficheros y el uso de la red. La información recogida se usa para informar al nodo maestro.
+
+### Complementos de los nodos
+
+Los complementos dotan a la estructura del clúster de funcionalidades adicionales, que aún no está disponibles por defecto en Kubernetes, pero que se pueden implementar a través de terceros:
+
+* DNS: Pese a ser un complemento, su funcionalidad es necesaria para el correcto funcionamiento del clúster. Será usado por kube-proxy, para reenviar la información.
+
+* Dashboard: Una interfície web destinada al usuario con finalidades de administración del clúster.
+
+En la siguiente imagen se muestra la estructura completa de la arquitectura con los componentes en cada elemento del clúster.
+
+![](https://d33wubrfki0l68.cloudfront.net/e7b766e0175f30ae37f7e0e349b87cfe2034a1ae/3e391/images/docs/why_containers.svg)
+
+
