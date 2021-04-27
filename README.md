@@ -177,7 +177,7 @@ Los dos primeros ejemplos selecionan los objetos que tengan la etiqueta, mientra
 
 El espacio de nombres sirve para dividir el clúster físico de manera virtual, de forma que podría decirse que crea clústers virtuales. Además, esta división lógica crea aislamientos de nombres entre los objetos de diferentes espacios de nombres. Por ejemplo, podríamos tener un pod en un nodo con un nombre, y en el mismo nodo, pero en un namespace diferente otro pod con el mismo nombre.
 
-![](https://imgur.com/a/VxJbX9U)
+![](https://i.imgur.com/CB1epTZ.jpg)
 
 Cuando se crea un clúster de Kubernetes, se crean por defecto tres namespaces en el sistema:
 
