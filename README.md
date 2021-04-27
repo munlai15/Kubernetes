@@ -120,3 +120,71 @@ En la siguiente imagen se muestra la estructura completa de la arquitectura con 
 
 ![](https://miro.medium.com/max/981/1*HXbT0c4Q5XaiCIp6y3VMvw.png)
 
+## Etiquetas
+
+Están definidas en los objetos y son una dupla de clave y valor separados por dos puntos, es decir, con la forma "clave:valor". Se usan para la gestión de los objetos por parte de los controladores del clúster.
+
+Hay que tener en cuenta que una etiqueta debe ser única en un objeto pero puede tener varios valores, incluso estar vacío.
+
+En el objeto las etiquetas se organizan a continuación de la etiqueta "labels" de los metadatos.
+
+```
+"metadata": {
+  "labels": {
+    "key1" : "value1",
+    "key2" : "value2"
+  }
+}
+```
+
+Las etiquetas no están previamente definidas, pudiendo cada desarrollador establecer los nombres que más convengan.
+
+### Selectores de etiquetas (labels)
+
+Antes se ha visto que no pueden existir dos etiquetas con el mismo nombre en un objeto, pero si puede haber dos objetos con la misma etiqueta y el mismo valor. Esto hace posible agrupar un conjunto de objetos, en función de una etiqueta, usando los selectores de etiquetas y comprobando los valores que estas tienen. Por ejemplo, se utiliza para ejecutar pods para prestar un servicio en el sistema.
+
+### Tipos de selectores
+
+* Selectores de igualdad: Busca igualdades que cumplan la condición especificada en el operador definido de la expresión implementada.
+
+```
+1. app = server
+2. app != zone1
+```
+
+El primero selecciona objetos que tienen la etiqueta "app" y el valor "server", y el segundo ejemplo excluye los objetos que tengan el valor "zone1".
+
+* Selectores de conjunto: Este tipo de selectores busca que una etiqueta tenga un valor que satisface un rango de opciones, es decir, no hay una condición específica de selección como en los selectores de igualdad.
+
+```
+1. type in (server, client1)
+2. zone notin (zone1, zone2)
+```
+
+El primer ejemplo selecciona los objetos que tienen la etiqueta "type" con los valores "server" y "cliente1". El segundo ejemplo selecciona los objetos que no tengan el valor "zone1", "zone2" y "zone3". Como se ve en ambos ejemplos, puede haber varios valores para configurar la regla del selector.
+
+* Selectores de clave: Estos selectores solo comprueban la existencia de una etiqueta, sin importar el valor que tiene.
+
+```
+1. app
+2. type
+3. !zone
+```
+
+Los dos primeros ejemplos selecionan los objetos que tengan la etiqueta, mientras que el tercer ejemplo excluye a los objetos que contengan la etiqueta "zone". Como no importa el valor de las etiquetas, no se implementan en la regla, es más una condición de existencia.
+
+## Espacio de nombres (namespaces)
+
+El espacio de nombres sirve para dividir el clúster físico de manera virtual, de forma que podría decirse que crea clústers virtuales. Además, esta división lógica crea aislamientos de nombres entre los objetos de diferentes espacios de nombres. Por ejemplo, podríamos tener un pod en un nodo con un nombre, y en el mismo nodo, pero en un namespace diferente otro pod con el mismo nombre.
+
+![](https://imgur.com/a/VxJbX9U)
+
+Cuando se crea un clúster de Kubernetes, se crean por defecto tres namespaces en el sistema:
+
+* Default: Cuando se crean objetos a los que no se le ha especificado un espacio de nombres concreto se le asigna el namespace "default".
+
+* Kube-system: Kubernetes necesita objetos para funcionar y desempeñar su trabajo. Estos objetos se crean en este espacio de nombres.
+
+* Kube-public: Como su nombre indica es público y por lo tanto todos los usuarios pueden acceder a su contenido. Puede ser un espacio que esté vacío o que contenga información pública que interese mostrar.
+
+Adicionalmente, a estos tres espacios de nombres, se pueden crear nuevos espacios para dividir el sistema de manera conveniente. Por ejemplo, crear un espacio de nombres dedicado a pruebas de las aplicaciones que queramos testear previamente.
