@@ -188,3 +188,61 @@ Cuando se crea un clúster de Kubernetes, se crean por defecto tres namespaces e
 * Kube-public: Como su nombre indica es público y por lo tanto todos los usuarios pueden acceder a su contenido. Puede ser un espacio que esté vacío o que contenga información pública que interese mostrar.
 
 Adicionalmente, a estos tres espacios de nombres, se pueden crear nuevos espacios para dividir el sistema de manera conveniente. Por ejemplo, crear un espacio de nombres dedicado a pruebas de las aplicaciones que queramos testear previamente.
+
+## Objetos controladores
+
+Existen objetos de los controladores encargados de que el clúster funcione correctamente para que pueda gestionar los pods y, por lo tanto, la orquestración de contenedores.
+
+### Deployment
+
+Es el controlador de despliegues de contenedores que necesitamos para nuestra aplicación. Se encarga de que esta se ejecute en base a unas características específicas. Por ejemplo, el número de pods que queremos que se ejecuten.
+
+###  ReplicaSet
+
+Es un controlador de réplicas de pods de la aplicación desplegada. Estas cantidades específicas de réplicas se vigilan y, en caso de que no se cumplan, ReplicaSet se encarga de recuperar el estado deseado del número de réplicas. Por ejemplo, si hemos especificado que queremos tres réplicas de un pod y uno de los nodos del clúster deja de funcionar, ReplicaSet se encargará de solicitar la creación de nuevos pods que se alojarán en otros nodos para así seguir manteniendo la configuración deseada.
+
+## Almacenamiento
+
+Las aplicaciones que se ejecutan en contenedores pueden necesitar algún tipo de almacenamiento para su correcta ejecución, ya sea solo durante la ejecución o recibiendo información del sistema de almacenamiento. Es por eso que Kubernetes utiliza volúmenes capaces de almacenar datos.
+
+### Volúmenes
+
+Para este almacenamiento se crea un objeto volumen llamado "volumen", que se ejecuta en el pod y es accesible por todos los contenedores ejecutados en el mismo. Pero este almacenamiento es temporal, es decir, lo que se almacena en un pod solo permanece durante la ejecución del pod. Por lo que, si tanto un pod como un nodo que ejecuta ese pod deja de funcionar, Kubernetes puede lanzar otro pod para reponer el servicio, pero el volumen vuelve a tener la información especificada en la configuración de la aplicación que estamos desplegando, no del anterior.
+
+* EmptyDir: Monta un volumen vacío en el pod del contenedor en la ruta especificada en la configuración del contenedor con la etiqueta "emptyDir".
+
+### Volúmenes persistentes
+
+En cambio, si queremos usar almacenamiento persistente en un pod, se utiliza un volumen de tipo persistente llamado *persistentVolume*. Este tipo de volúmenes cargarán una ruta de la máquina física y con una petición de volumen llamada *persistentVolumeClaim* se monta en el ordenador.
+
+Cuando se modifica algo en este volumen también se modifica en la máquina física. Por lo que, si un nodo se reinicia sigue teniendo la información que modificó.
+
+* HostPath: Monta una ruta del sistema de ficheros del nodo en la ruta indicada en la configuración del contenedor. Esta información se da como valor de la etquieta "path" que estará anidada debajo de la etiqueta "hostPath".
+
+### Volúmenes de proveedores de nube
+
+Tanto Amazon como Google y demás, disponen de sus propios sistemas de almacenamiento persistente. Estos volúmenes solo se pueden usar en los contenedores de la misma zona geográfica, por lo que es importante usar mecanismos como los selectores para que los pods que quieran usar estos volúmenes cumplan con este requisito.
+
+* gcePersistentDisk: Monta un volumen Google Compute Engine (GCE) persistent disk en un pod.
+
+* awsElasticBlockStore: Monta un volumen AWS EBS Volume en un pod.
+
+* azureDisk: Monta un Microsoft Azure Data Disk en un pod.
+
+* azureFile: Monta un Microsoft Azure File Volume en un pod.
+
+## Servicios
+
+Cuando la aplicación ya es desplegada en un clúster es importante saber como conectarse a la aplicación para que un cliente pueda realizar la petición de un servicio. Los servicios exponen la aplicación de todas las réplicas existentes de manera unificada, utilizando etiquetas y selectores.
+
+### Tipos de servicios
+
+* ClusterIP: Define el servicio asignando una IP interna de clúster, por lo que solo se puede acceder al servicio desde el propio clúster. De esta manera no hay que preocuparse de las variaciones de las direcciones IP de los nodos del clúster que se puedan dar por sustitución de nodos o reasignación de direcciones.
+
+* NodePort: Asigna el mismo puerto en cada nodo para cada servicio, así con NodeIP (IP del nodo) y NodePort (puerto asignado para el servicio) se puede acceder al servicio desde fuera del clúster. *Kube-proxy* se encargará de enrutar el tráfico, usando el servicio DNS, al nodo correcto.
+
+Para que el usuario que acceda a los servicios no tenga la necesidad de conocer todas las direcciones IP, se puede crear un balanceador de carga externo.
+
+* LoadBalancer: Si usamos un proveedor de servicios en nube para nuestro clúster de Kubernetes no necesitamos crear un balanceador de carga, ya que la mayoría de los proveedores tienen plugins para esta tarea. A estos servicios se denominan de tipo *LoadBalancer* y crean una IP fija y externa al servicio àra que el balanceador se encargue de encaminar el tráfico.
+
+## Networking
