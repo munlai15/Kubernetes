@@ -263,7 +263,7 @@ Perquè la connectivitat funcioni correctament en el clúster ha de complir-se:
 
 Per començar a treballar amb Kubernetes instal·larem docker, minikube i kubectl.
 
-# Docker Engine
+### Docker Engine
 
 Docker Engine és una tecnologia de contenidors de codi obert per crear i contenir aplicacions. Docker Engine actua com una aplicació client-servidor. L'utilitzarem per desplegar Minikube.
 
@@ -285,7 +285,7 @@ Arrancada:
 [adri@localhost kubernetes]$ sudo systemctl start docker
 ```
 
-# Minikube
+### Minikube
 
 Com hem vist abans, Kubernetes necessita com a mínim 3 nodes per funcionar, i es complica massa si només volem fer probes localment. Es per això que es va crear Minikube. Minikube és una versió reduïda de Kubernetes, desplegada en una màquina virtual, que actuarà de master i treballador al mateix temps. 
 
