@@ -255,6 +255,59 @@ Un pod és la unitat més bàsica que ens trobem en l'arquitectura de Kubernetes
 
 Perquè la connectivitat funcioni correctament en el clúster ha de complir-se:
 
-* Que tots els pods d'un mateix espai de noms puguin aconseguir-se entre ells.
-* Que tots els nodes puguin aconseguir-se entre ells.
-* Que tots els pods puguin aconseguir tots els nodes.
+* Que tots els pods d'un mateix espai de noms puguin arribar a establir comunicació entre ells.
+* Que tots els nodes puguin establir comunicació entre ells.
+* Que tots els pods puguin establir comunicació amb tots els nodes.
+
+## Configuració e instal·lació de Kubernetes
+
+Per començar a treballar amb Kubernetes instal·larem docker, minikube i kubectl.
+
+# Docker Engine
+
+Docker Engine és una tecnologia de contenidors de codi obert per crear i contenir aplicacions. Docker Engine actua com una aplicació client-servidor. L'utilitzarem per desplegar Minikube.
+
+Instal·lació:
+
+```bash
+[adri@localhost kubernetes]$ sudo dnf -y install dnf-plugins-core
+
+[adri@localhost kubernetes]$ sudo dnf config-manager \
+    --add-repo \
+    https://download.docker.com/linux/fedora/docker-ce.repo
+
+[adri@localhost kubernetes]$ sudo dnf -y install docker-ce docker-ce-cli containerd.io
+```
+
+Arrancada:
+
+```bash
+[adri@localhost kubernetes]$ sudo systemctl start docker
+```
+
+# Minikube
+
+Com hem vist abans, Kubernetes necessita com a mínim 3 nodes per funcionar, i es complica massa si només volem fer probes localment. Es per això que es va crear Minikube. Minikube és una versió reduïda de Kubernetes, desplegada en una màquina virtual, que actuarà de master i treballador al mateix temps. 
+
+Descarreguem el paquet i l'instal·lem:
+
+```bash
+[adri@localhost kubernetes]$ curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+[adri@localhost kubernetes]$ sudo install minikube-linux-amd64 /usr/local/bin/minikube
+```
+
+Iniciem el clúster:
+
+```bash
+[adri@localhost kubernetes]$ minikube start --driver=docker
+```
+
+Podem especificar que funcioni sempre amb docker:
+
+```bash
+[adri@localhost kubernetes]$ minikube config set driver docker
+```
+
+
+
+
