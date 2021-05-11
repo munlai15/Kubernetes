@@ -181,8 +181,6 @@ Els dos primers exemples seleccionen els objectes que tinguin l'etiqueta, mentre
 
 L'espai de noms serveix per a dividir el clúster físic de manera virtual, de manera que podria dir-se que crea clústers virtuals. A més, aquesta divisió lògica crea aïllaments de noms entre els objectes de diferents espais de noms. Per exemple, podríem tenir un pod en un node amb un nom, i en el mateix node, però en un namespace diferent altre pod amb el mateix nom.
 
-![](https://i.imgur.com/CB1epTZ.jpg)
-
 Quan es crea un clúster de Kubernetes, es creen per defecte tres namespaces en el sistema:
 
 * Default: Quan es creen objectes als quals no se li ha especificat un espai de noms concret se li assigna el namespace "default".
@@ -259,9 +257,9 @@ Perquè la connectivitat funcioni correctament en el clúster ha de complir-se:
 * Que tots els nodes puguin establir comunicació entre ells.
 * Que tots els pods puguin establir comunicació amb tots els nodes.
 
-## Configuració e instal·lació de Kubernetes
+## Configuració i instal·lació de Kubernetes
 
-Per començar a treballar amb Kubernetes instal·larem docker, minikube i kubectl.
+Per començar a treballar amb Kubernetes instal·larem docker, minikube i kubectl. Hem de tenir en compte que per a que funcioni Minikube i treballi sobre Docker, necessitarem una versió de Docker superior a la versió 18.09. I per utilitzar aquestes versions de Docker, necessitem una versió de 64-bit de Fedora de les versions Fedora 32, Fedora 33 o Fedora 34. És per això que en el meu cas, que disponia de Fedora 27, he hagut d'instal·lar-me un nou Fedora.
 
 ### Docker Engine
 
@@ -276,7 +274,7 @@ Instal·lació:
     --add-repo \
     https://download.docker.com/linux/fedora/docker-ce.repo
 
-[adri@localhost kubernetes]$ sudo dnf -y install docker-ce docker-ce-cli containerd.io
+[adri@localhost kubernetes]$ sudo dnf -y install docker-ce
 ```
 
 Arrancada:
@@ -308,6 +306,101 @@ Podem especificar que funcioni sempre amb docker:
 [adri@localhost kubernetes]$ minikube config set driver docker
 ```
 
+Un cop terminada l'execució de la ordre, ens recomana instal·lar kubectl.
 
+### Kubectl
 
+Kubectl és el client o interfície de línia de comandes per executar ordres sobre clúster o aplicacions de Kubernetes. Aquesta interfície és la manera estàndard de comunicació amb el clúster ja que permet realitzar tot tipus d'operacions.
+
+Descarreguem el paquet i l'instal·lem:
+
+```bash
+[adri@fedora kubernetes]$ curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+[adri@fedora kubernetes]$ sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+```
+
+Verifiquem la versió instal·lada:
+
+```bash
+[adri@fedora kubernetes]$ kubectl version --client
+Client Version: version.Info{Major:"1", Minor:"21", GitVersion:"v1.21.0", GitCommit:"cb303e613a121a29364f75cc67d3d580833a7479", GitTreeState:"clean", BuildDate:"2021-04-08T16:31:21Z", GoVersion:"go1.16.1", Compiler:"gc", Platform:"linux/amd64"}
+```
+
+Un cop hem iniciat Minikube, podem verificar si kubectl està correctament configurat i vinculat al clúster:
+
+```bash
+[adri@fedora kubernetes]$ kubectl cluster-info
+Kubernetes control plane is running at https://192.168.49.2:8443
+KubeDNS is running at https://192.168.49.2:8443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+```
+
+## Accés al clúster
+
+Abans d'accedir al clúster, verifiquem l'estat del mateix:
+
+```bash
+[adri@fedora kubernetes]$ minikube status
+minikube
+type: Control Plane
+host: Running
+kubelet: Running
+apiserver: Running
+kubeconfig: Configured
+```
+
+Un cop hem vist que el clúster està en funcionament, podem accedir-hi de varies maneres:
+
+### Kubectl 
+
+Com hem esmentat abans, kubectl es el CLI de Kubernetes i l'utilitzarem per administrar els recursos del clúster i les aplicacions. Per veure totes les possibilitats i opcions del client, veure [aquí](https://kubernetes.io/docs/reference/kubectl/overview/)
+
+### Dashboard 
+
+Podem accedir al clúster mitjançant una interfície web amb la següent ordre:
+
+```bash
+[adri@fedora kubernetes]$ minikube dashboard
+🔌  Enabling dashboard ...
+    ▪ Using image kubernetesui/dashboard:v2.1.0
+    ▪ Using image kubernetesui/metrics-scraper:v1.0.4
+🤔  Verifying dashboard health ...
+🚀  Launching proxy ...
+🤔  Verifying proxy health ...
+🎉  Opening http://127.0.0.1:40833/api/v1/namespaces/kubernetes-dashboard/services/http:kubernetes-dashboard:/proxy/ in your default browser...
+```
+
+![Dashboard](.aux/dashboard.png)
+
+### API server
+
+Com hem explicat abans a l'apartat de Components de Kubernetes, disposem del servidor API per accedir al nostre clúster. Per connectar-nos utilitzarem kubectl proxy.
+
+Executem el proxy:
+
+```bash
+[adri@fedora kubernetes]$ kubectl proxy
+Starting to serve on 127.0.0.1:8001
+```
+
+Mirem l'API:
+
+```bash
+[adri@fedora kubernetes]$ curl http://localhost:8001/api/
+{
+  "kind": "APIVersions",
+  "versions": [
+    "v1"
+  ],
+  "serverAddressByClientCIDRs": [
+    {
+      "clientCIDR": "0.0.0.0/0",
+      "serverAddress": "192.168.49.2:8443"
+    }
+  ]
+}
+```
+
+![API](./aux/API.png)
+
+## Creació del deployment
 
