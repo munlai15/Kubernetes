@@ -404,7 +404,15 @@ Mirem l'API:
 
 ## Creació del deployment
 
-Crearem un deployment, que serà el controlador dels desplegaments dels contenidors que necessitem per a la nostra aplicació. Disposem de dues maneres: amb kubectl des de comandes i amb el dashboard.
+És la unitat de més alt nivell. Serà el controlador dels desplegaments dels contenidors que necessitem per a la nostra aplicació. Ens permet definir diferentes funcions:
+
+* Control de rèpliques
+* Escalabilitat dels pods
+* Actualitzacions continues
+* Desplegaments automàtics
+* Rollback a versions anteriors
+
+Disposem de dues maneres: amb kubectl des de comandes i amb el dashboard.
 
 ### Creació amb comandes (kubectl)
 
