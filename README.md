@@ -2,9 +2,55 @@ Project HISX2 2020-2021 Kubernetes
 
 # Kubernetes
 
+## Índex
+
+- [Introducció](#introducció)
+ * [Què és Kubernetes](#què-és-kubernetes)
+ * [Per què utilitzar contenidors?](#per-què-utilitzar-contenidors)
+- [Arquitectura de Kubernetes](#arquitectura-de-kubernetes)
+ * [Pods](#pods)
+ * [Nodes](#nodes)
+ * [Clúster](#clúster)
+- [Components de Kubernetes](#components-de-kubernetes)
+ * [Components del máster](#components-del-master)
+  + [Servidor de API](#servidor-de-api)
+  + [Etcd](#etcd)
+  + [Planificador (Scheduler)](#planificador-(scheduler))
+  + [Gestor de controladors (Controller-manager)](#gestor-de-controladors-(controller---manager))
+ * [Components dels nodes](#components-dels-nodes)
+  + [Kubelet](#kubelet)
+  + [Kube-proxy](#kube---proxy)
+  + [cAdvisor](#cadvisor)
+ * [Complements dels nodes](#complements-dels-nodes)
+- [Etiquetes](#etiquetes)
+ * [Selectors d'etiquetes (labels)](#selectors-d'etiquetes-(labels))
+ * [Tipus de selectors](#tipus-de-selectors)
+- [Espai de noms (namespaces)](#espai-de-noms-(namespaces))
+- [Objectes controladors](#objectes-controladors)
+ * [Deployment](#deployment)
+ * [ReplicaSet](#replicaset)
+- [Emmagatzematge](#emmagatzematge)
+ * [Volums](#volums)
+ * [Volums persistents](#volums-persistents)
+ * [Volums de proveïdors de núvol](#volums-de-proveïdors-de-núvol)
+- [Serveis](#serveis)
+ * [Tipus de serveis](#tipus-de-serveis)
+- [Networking](#networking)
+- [Configuració i instal·lació de Kubernetes](#configuració-i-instal·lació-de-kubernetes)
+ * [Docker Engine](#docker-engine)
+ * [Minikube](#minikube)
+ * [Kubectl](#kubectl)
+- [Accés al clúster](#accés-al-clúster)
+ * [Kubectl](#kubectl)
+ * [Dashboard](#dashboard)
+ * [API server](#api-server)
+- [Creació del deployment](#creació-del-deployment)
+ * [Creació amb comandes](#creació-amb-comandes)
+ * [Creació amb dashboard](#creació-amb-dashboard)
+
 ## Introducció
 
-### Que és Kubernetes?
+### Què és Kubernetes?
 
 Kubernetes és una plataforma portable i extensible de codi obert per a administrar càrregues de treball i serveis. Kubernetes facilita l'automatització i la configuració declarativa. Té un ecosistema gran i en ràpid creixement. El suport, les eines i els serveis per a Kubernetes estan àmpliament disponibles.
 
