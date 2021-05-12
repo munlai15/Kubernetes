@@ -404,3 +404,88 @@ Mirem l'API:
 
 ## Creació del deployment
 
+Crearem un deployment, que serà el controlador dels desplegaments dels contenidors que necessitem per a la nostra aplicació. Disposem de dues maneres: amb kubectl des de comandes i amb el dashboard.
+
+### Creació amb comandes (kubectl)
+
+Podrem crear el nostre deployment des de la línia de comandes amb kubectl, pero primèrament necessitem crear el fitcher .yaml on es basarà la creació d'aquest.
+
+Per exemple, crearem aquest .yaml bastant sencill, que desplegarà 2 pods:
+
+```bash
+apiVersion: apps/v1 
+kind: Deployment
+metadata:
+  name: nginx-deployment
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.7.9
+        ports:
+        - containerPort: 80
+```
+
+Un cop creat el fitxer, creem el deployment amb kubectl:
+
+```bash
+[adri@fedora kubernetes]$ kubectl create -f nginx-deployment.yaml 
+deployment.apps/nginx-deployment created
+```
+
+Verifiquem:
+
+```bash
+[adri@fedora kubernetes]$ kubectl get deployments
+NAME               READY   UP-TO-DATE   AVAILABLE   AGE
+nginx-deployment   2/2     2            2           3m3s
+
+[adri@fedora kubernetes]$ kubectl get pods
+NAME                                READY   STATUS    RESTARTS   AGE
+nginx-deployment-5d59d67564-6n2rq   1/1     Running   0          3m8s
+nginx-deployment-5d59d67564-6rjmb   1/1     Running   0          3m8s
+
+[adri@fedora kubernetes]$ kubectl get replicasets
+NAME                          DESIRED   CURRENT   READY   AGE
+nginx-deployment-5d59d67564   2         2         2       3m20s
+```
+
+ELiminem:
+
+```bash
+[adri@fedora kubernetes]$ kubectl delete -n default deployment nginx-deployment
+deployment.apps "nginx-deployment" deleted
+```
+
+### Creació amb dashboard
+
+Obrim el dashboard:
+
+```bash
+[adri@fedora kubernetes]$ minikube dashboard
+🤔  Verifying dashboard health ...
+🚀  Launching proxy ...
+🤔  Verifying proxy health ...
+🎉  Opening http://127.0.0.1:34709/api/v1/namespaces/kubernetes-dashboard/services/http:kubernetes-dashboard:/proxy/ in your default browser...
+```
+
+Un cop obert, permém el botó +:
+
+![+](./aux/+.png)
+
+Ens dóna tres opcions per a la creació del fitxer del deployment: la primera seria introduir el codi del fitxer en la mateixa web (bàsicament com hem fet abans per crear-lo  en un fitxer), la segona per importar un fitxer ja existent (podríem importar el abans creat) i la tercera s'autogenera segons els paràmetres que l'indiquem. Com ja hem probat abans via comandes les dues primeres opcions, provem aquesta darrera opció:
+
+![Creación deployment dashboard](./aux/create-from-form.png)
+
+Un cop premém el botó de deploy, es crea el deployment. Podem visualitzar tota la informació al dashboard.
+
+![Deployment creado](./aux/deployment-dashboard)
+
