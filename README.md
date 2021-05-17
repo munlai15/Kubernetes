@@ -44,7 +44,9 @@ Project HISX2 2020-2021 Kubernetes
 	* [Kubectl](#kubectl)
 	* [Dashboard](#dashboard)
 	* [API server](#api-server)
-- [Creació del deployment](#creació-del-deployment)
+- [Creació d'un pod](#creació-d'un-pod)
+- [Creació d'un replicaset](#creació-d'un-replicaset)
+- [Creació d'un deployment](#creació-d'un-deployment)
 	* [Creació amb comandes](#creació-amb-comandes)
 	* [Creació amb dashboard](#creació-amb-dashboard)
 
@@ -448,7 +450,117 @@ Mirem l'API:
 
 ![API](./aux/API.png)
 
-## Creació del deployment
+## Creció d'un pod
+
+És la unitat més petita de l'arquitectura de Kubernetes. Com hem explicat abans en l'apartat d'arquitectura, un pod representa un conjunt de contenidors que comparteixen emmagatzematge i una única IP, encara que són efímers.
+
+Fitxer d'exemple d'un pod:
+
+```bash
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+  namespace: default
+  labels:
+    app: nginx
+    service: web
+spec:
+  containers:
+    - image: nginx:1.16
+      name: nginx
+      imagePullPolicy: Always
+```
+
+Creem el pod:
+
+```bash
+[adri@fedora kubernetes]$ vim pod.yaml
+[adri@fedora kubernetes]$ kubectl create -f pod.yaml 
+pod/nginx created
+[adri@fedora kubernetes]$ kubectl get pods
+NAME    READY   STATUS    RESTARTS   AGE
+nginx   1/1     Running   0          106s
+```
+
+Eliminar el pod:
+
+```bash
+[adri@fedora kubernetes]$ kubectl delete -n default pod nginx
+pod "nginx" deleted
+```
+
+## Creació d'un replicaset
+
+És el recurs de Kubernetes que ens asegura que sempre s'executin el número de répliques que indiquem d'un pod determinat.
+
+Fitxer d'exemple d'un replicaset:
+
+```bash
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: nginx
+  namespace: default
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+        - image:  nginx
+          name:  nginx
+```
+
+Es crea i s'afegeix:
+
+```bash
+[adri@fedora kubernetes]$ vim replicaset.yaml
+[adri@fedora kubernetes]$ kubectl create -f replicaset.yaml 
+replicaset.apps/nginx created
+[adri@fedora kubernetes]$ kubectl get pods
+NAME          READY   STATUS    RESTARTS   AGE
+nginx         1/1     Running   0          11m
+nginx-vvbzc   1/1     Running   0          110s
+```
+
+Escalem els pods a 5 rèpliques:
+
+```bash
+[adri@fedora kubernetes]$ kubectl scale rs nginx --replicas=5
+replicaset.apps/nginx scaled
+[adri@fedora kubernetes]$ kubectl get pods -o wide
+NAME          READY   STATUS    RESTARTS   AGE     IP           NODE       NOMINATED NODE   READINESS GATES
+nginx         1/1     Running   0          15m     172.17.0.5   minikube   <none>           <none>
+nginx-45wtb   1/1     Running   0          67s     172.17.0.8   minikube   <none>           <none>
+nginx-6jqnd   1/1     Running   0          67s     172.17.0.9   minikube   <none>           <none>
+nginx-ppvcb   1/1     Running   0          67s     172.17.0.7   minikube   <none>           <none>
+nginx-vvbzc   1/1     Running   0          5m42s   172.17.0.6   minikube   <none>           <none>
+```
+
+Ara probarem que el replicaset funciona, eliminarem tots el pods menys el nginx-vvbzc. Veurem com un cop s'eliminen, els substitueix:
+
+```bash
+[adri@fedora kubernetes]$ kubectl delete -n default pod nginx-45wtb nginx-6jqnd nginx-ppvcb nginx-vvbzc
+pod "nginx-45wtb" deleted
+pod "nginx-6jqnd" deleted
+pod "nginx-ppvcb" deleted
+pod "nginx-vvbzc" deleted
+[adri@fedora kubernetes]$ kubectl get pods -o wide
+NAME          READY   STATUS    RESTARTS   AGE     IP           NODE       NOMINATED NODE   READINESS GATES
+nginx-7kks4   1/1     Running   0          2m55s   172.17.0.8   minikube   <none>           <none>
+nginx-kkq47   1/1     Running   0          2m53s   172.17.0.5   minikube   <none>           <none>
+nginx-stng7   1/1     Running   0          2m55s   172.17.0.7   minikube   <none>           <none>
+nginx-vvbzc   1/1     Running   0          39m     172.17.0.6   minikube   <none>           <none>
+nginx-z9glv   1/1     Running   0          2m57s   172.17.0.9   minikube   <none>           <none>
+```
+
+## Creació d'un deployment
 
 És la unitat de més alt nivell. Serà el controlador dels desplegaments dels contenidors que necessitem per a la nostra aplicació. Ens permet definir diferentes funcions:
 
@@ -501,7 +613,6 @@ Verifiquem:
 [adri@fedora kubernetes]$ kubectl get deployments
 NAME               READY   UP-TO-DATE   AVAILABLE   AGE
 nginx-deployment   2/2     2            2           3m3s
-
 [adri@fedora kubernetes]$ kubectl get pods
 NAME                                READY   STATUS    RESTARTS   AGE
 nginx-deployment-5d59d67564-6n2rq   1/1     Running   0          3m8s
@@ -512,7 +623,17 @@ NAME                          DESIRED   CURRENT   READY   AGE
 nginx-deployment-5d59d67564   2         2         2       3m20s
 ```
 
-ELiminem:
+Actualment, els pods están funcionant amb la imatge nginx:1.7.9. Com el deployment ens ho permet, actualitzarem la imatge dels pods a la imatge nginx:latest:
+
+Cambiem la imatge en el fitxer de configuració del deployment i ho verifiquem:
+
+```bash
+[adri@fedora kubernetes]$ kubectl get pods nginx-deployment-75b69bd684-t7vzr -o yaml | grep 'image:'
+  - image: nginx:latest
+    image: nginx:latest
+```
+
+Eliminem:
 
 ```bash
 [adri@fedora kubernetes]$ kubectl delete -n default deployment nginx-deployment
