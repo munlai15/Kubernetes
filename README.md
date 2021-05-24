@@ -49,6 +49,8 @@ Project HISX2 2020-2021 Kubernetes
 - [Creació d'un deployment](#creació-d'un-deployment)
 	* [Creació amb comandes](#creació-amb-comandes)
 	* [Creació amb dashboard](#creació-amb-dashboard)
+- [Conclusions](#conclusions)
+- [Webgrafia](#webgrafia)
 
 ## Introducció
 
@@ -664,3 +666,14 @@ Un cop premém el botó de deploy, es crea el deployment. Podem visualitzar tota
 
 ![Deployment creado](./aux/deployment-dashboard)
 
+## Conclusions
+
+És tan gran l'impacte que està tenint Kubernetes en la orquestració i gestió de contenidors, que s'està convertint en l'eina més utilitzada. Actualment es troba en un moment de gran creixement gràcies a la comunitat i al suport per part de Google, Red Hat, Microsoft, Amazon...
+
+Els contenidors han suposat una revolució en la manera de desenvolupar i deplegar aplicacions, pero això no haguès estat posible sense eines com Kubernetes.
+
+## Webgrafia
+
+https://kubernetes.io/
+https://minikube.sigs.k8s.io/
+https://www.youtube.com/watch?v=X48VuDVv0do
