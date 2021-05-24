@@ -674,6 +674,6 @@ Els contenidors han suposat una revolució en la manera de desenvolupar i depleg
 
 ## Webgrafia
 
-https://kubernetes.io/
-https://minikube.sigs.k8s.io/
+https://kubernetes.io/  
+https://minikube.sigs.k8s.io/  
 https://www.youtube.com/watch?v=X48VuDVv0do
