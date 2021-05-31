@@ -55,4 +55,20 @@ Perquè l'arquitectura descrita abans funcioni correctament, Kubernetes utilitza
 #
 ![.](../aux/cluster.png)
 
+#
+## Espai de noms (namespaces)
+Serveix per a dividir el clúster físic de manera virtual, de manera que podria dir-se que crea clústers virtuals.
+Quan es crea un clúster de Kubernetes, es creen per defecte tres namespaces en el sistema:
+* Default
+* Kube-system
+* Kube-public  
 
+#
+## Objectes controladors
+Existeixen objectes dels controladors encarregats que el clúster funcioni correctament perquè pugui gestionar els pods i, per tant, la orquestració de contenidors.
+### Deployment
+És el controlador de desplegaments de contenidors que necessitem per a la nostra aplicació. S'encarrega que aquesta s'executi sobre la base d'unes característiques específiques. Per exemple, el número de pods que volem que s'executin.  
+
+#
+### ReplicaSet
+És un controlador de rèpliques de pods de l'aplicació desplegada. Aquestes quantitats específiques de rèpliques es vigilen i, en cas que no es compleixin, ReplicaSet s'encarrega de recuperar l'estat desitjat del nombre de rèpliques.  
