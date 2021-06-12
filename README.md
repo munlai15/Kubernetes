@@ -12,15 +12,15 @@ Project HISX2 2020-2021 Kubernetes
 	* [Nodes](#nodes)
 	* [Clúster](#clúster)
 - [Components de Kubernetes](#components-de-kubernetes)
-	* [Components del máster](#components-del-master)
-		+ [Servidor de API](#servidor-de-api)
-		+ [Etcd](#etcd)
-		+ [Planificador (Scheduler)](#planificador-(scheduler))
-		+ [Gestor de controladors (Controller-manager)](#gestor-de-controladors-(controller---manager))
+	* [Components del máster](#components-del-máster)
+		+ [Servidor de API](**servidor-de-api**)
+		+ [Etcd](**etcd**)
+		+ [Planificador (Scheduler)](**planificador-(scheduler)**)
+		+ [Gestor de controladors (Controller-manager)](**gestor-de-controladors-(controller---manager)**)
 	* [Components dels nodes](#components-dels-nodes)
-		+ [Kubelet](#kubelet)
-  		+ [Kube-proxy](#kube---proxy)
-		+ [cAdvisor](#cadvisor)
+		+ [Kubelet](**kubelet**)
+  		+ [Kube-proxy](**kube---proxy**)
+		+ [cAdvisor](**cadvisor**)
 	* [Complements dels nodes](#complements-dels-nodes)
 - [Etiquetes](#etiquetes)
 	* [Selectors d'etiquetes (labels)](#selectors-d'etiquetes-(labels))
@@ -47,7 +47,7 @@ Project HISX2 2020-2021 Kubernetes
 - [Creació d'un pod](#creació-d'un-pod)
 - [Creació d'un replicaset](#creació-d'un-replicaset)
 - [Creació d'un deployment](#creació-d'un-deployment)
-	* [Creació amb comandes](#creació-amb-comandes)
+	* [Creació amb comandes (kubectl)](#creació-amb-comandes-(kubectl))
 	* [Creació amb dashboard](#creació-amb-dashboard)
 - [Conclusions](#conclusions)
 - [Webgrafia](#webgrafia)
@@ -62,7 +62,7 @@ Google va alliberar el projecte Kubernetes l'any 2014. Kubernetes es basa en l'e
 
 ![](https://cdn.icon-icons.com/icons2/2699/PNG/512/kubernetes_logo_icon_168360.png)
 
-### Per què utilizar contenidors?
+### Per què utilitzar contenidors?
 
 Kubernetes ofereix un entorn d'administració centrat en contenidors.
 
@@ -452,7 +452,7 @@ Mirem l'API:
 
 ![API](./aux/API.png)
 
-## Creció d'un pod
+## Creació d'un pod
 
 És la unitat més petita de l'arquitectura de Kubernetes. Com hem explicat abans en l'apartat d'arquitectura, un pod representa un conjunt de contenidors que comparteixen emmagatzematge i una única IP, encara que són efímers.
 
