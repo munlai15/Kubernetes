@@ -19,6 +19,7 @@ Kubernetes ofereix un entorn d'administració centrat en contenidors.
 #
 ### Beneficis
 En resum, els beneficis d'usar contenidors inclouen:
+
 + Àgil creació i desplegament d'aplicacions
 + Desenvolupament, integració i desplegament continu
 + Separació de tasques entre Dev i Ops
@@ -33,6 +34,7 @@ En resum, els beneficis d'usar contenidors inclouen:
 #
 ## Arquitectura
 Kubernetes distribueix els contenidors en pods, així aquests poden estar en diversos nodes. Al seu torn, aquests nodes formen un clúster, completant així l'estructura que té Kubernetes.
+
 + Pod
 + Node
 + Clúster
@@ -40,7 +42,9 @@ Kubernetes distribueix els contenidors en pods, així aquests poden estar en div
 #
 ## Components 
 Perquè l'arquitectura descrita abans funcioni correctament, Kubernetes utilitza diversos components en els diferents elements del seu sistema.
+
 ### Components del node máster
+
 + Servidor API
 + Etcd
 + Planificador (Scheduler)
@@ -48,6 +52,7 @@ Perquè l'arquitectura descrita abans funcioni correctament, Kubernetes utilitza
 
 #
 ### Components dels nodes workers
+
 + Kubelet
 + Kube-proxy
 + cAdvisor
@@ -59,6 +64,7 @@ Perquè l'arquitectura descrita abans funcioni correctament, Kubernetes utilitza
 ## Espai de noms (namespaces)
 Serveix per a dividir el clúster físic de manera virtual, de manera que podria dir-se que crea clústers virtuals.
 Quan es crea un clúster de Kubernetes, es creen per defecte tres namespaces en el sistema:
+
 * Default
 * Kube-system
 * Kube-public  
@@ -66,6 +72,7 @@ Quan es crea un clúster de Kubernetes, es creen per defecte tres namespaces en 
 #
 ## Objectes controladors
 Existeixen objectes dels controladors encarregats que el clúster funcioni correctament perquè pugui gestionar els pods i, per tant, la orquestració de contenidors.
+
 ### Deployment
 És el controlador de desplegaments de contenidors que necessitem per a la nostra aplicació. S'encarrega que aquesta s'executi sobre la base d'unes característiques específiques. Per exemple, el número de pods que volem que s'executin.  
 
@@ -76,6 +83,7 @@ Existeixen objectes dels controladors encarregats que el clúster funcioni corre
 #
 ## Emmagatzematge
 Les aplicacions que s'executen en contenidors poden necessitar algun tipus d'emmagatzematge per a la seva correcta execució, ja sigui només durant l'execució o rebent informació del sistema d'emmagatzematge.
+
 ### Volums
 Per a aquest emmagatzematge es crea un objecte volum anomenat "volum", que s'executa en el pod i és accessible per tots els contenidors executats en aquest. Però aquest emmagatzematge és temporal, és a dir, la qual cosa s'emmagatzema en un pod només roman durant l'execució del pod.
 
