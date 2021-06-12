@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>presentacio</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+  </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<h1 id="kubernetes">Kubernetes</h1>
+<h2 id="project-hisx2-2020-2021">Project HISX2 2020-2021</h2>
+<p><img src="../aux/logo.png" /></p>
+<p>Adrián Narváez</p>
+<h1 id="section"></h1>
+<h2 id="introducció">Introducció</h2>
+<h3 id="què-és-kubernetes">Què és Kubernetes?</h3>
+<p>Kubernetes és una plataforma portable i extensible de codi obert per a administrar càrregues de treball i serveis en contenidors. Google va alliberar el projecte Kubernetes l’any 2014</p>
+<h1 id="section-1"></h1>
+<h3 id="contenidors">Contenidors</h3>
+<p>Kubernetes ofereix un entorn d’administració centrat en contenidors. <img src="../aux/containers.png" alt="." /></p>
+<h1 id="section-2"></h1>
+<h3 id="beneficis">Beneficis</h3>
+<p>En resum, els beneficis d’usar contenidors inclouen:</p>
+<ul>
+<li>Àgil creació i desplegament d’aplicacions</li>
+<li>Desenvolupament, integració i desplegament continu</li>
+<li>Separació de tasques entre Dev i Ops</li>
+<li>Observabilitat</li>
+<li>Consistència entre els entorns de desenvolupament, proves i producció</li>
+<li>Portabilitat entre núvols i distribucions</li>
+<li>Administració centrada en l’aplicació</li>
+<li>Microserveis distribuïts, elàstics, alliberats i feblement acoblats</li>
+<li>Aïllament de recursos</li>
+<li>Utilització de recursos</li>
+</ul>
+<h1 id="section-3"></h1>
+<h2 id="arquitectura">Arquitectura</h2>
+<p>Kubernetes distribueix els contenidors en pods, així aquests poden estar en diversos nodes. Al seu torn, aquests nodes formen un clúster, completant així l’estructura que té Kubernetes.</p>
+<ul>
+<li>Pod</li>
+<li>Node</li>
+<li>Clúster</li>
+</ul>
+<h1 id="section-4"></h1>
+<h2 id="components">Components</h2>
+<p>Perquè l’arquitectura descrita abans funcioni correctament, Kubernetes utilitza diversos components en els diferents elements del seu sistema.</p>
+<h3 id="components-del-node-máster">Components del node máster</h3>
+<ul>
+<li>Servidor API</li>
+<li>Etcd</li>
+<li>Planificador (Scheduler)</li>
+<li>Gestor de controladors (Controller-manager)</li>
+</ul>
+<h1 id="section-5"></h1>
+<h3 id="components-dels-nodes-workers">Components dels nodes workers</h3>
+<ul>
+<li>Kubelet</li>
+<li>Kube-proxy</li>
+<li>cAdvisor</li>
+</ul>
+<h1 id="section-6"></h1>
+<figure>
+<img src="../aux/cluster.png" alt="" /><figcaption>.</figcaption>
+</figure>
+<h1 id="section-7"></h1>
+<h2 id="espai-de-noms-namespaces">Espai de noms (namespaces)</h2>
+<p>Serveix per a dividir el clúster físic de manera virtual, de manera que podria dir-se que crea clústers virtuals. Quan es crea un clúster de Kubernetes, es creen per defecte tres namespaces en el sistema:</p>
+<ul>
+<li>Default</li>
+<li>Kube-system</li>
+<li>Kube-public</li>
+</ul>
+<h1 id="section-8"></h1>
+<h2 id="objectes-controladors">Objectes controladors</h2>
+<p>Existeixen objectes dels controladors encarregats que el clúster funcioni correctament perquè pugui gestionar els pods i, per tant, la orquestració de contenidors.</p>
+<h3 id="deployment">Deployment</h3>
+<p>És el controlador de desplegaments de contenidors que necessitem per a la nostra aplicació. S’encarrega que aquesta s’executi sobre la base d’unes característiques específiques. Per exemple, el número de pods que volem que s’executin.</p>
+<h1 id="section-9"></h1>
+<h3 id="replicaset">ReplicaSet</h3>
+<p>És un controlador de rèpliques de pods de l’aplicació desplegada. Aquestes quantitats específiques de rèpliques es vigilen i, en cas que no es compleixin, ReplicaSet s’encarrega de recuperar l’estat desitjat del nombre de rèpliques.</p>
+<h1 id="section-10"></h1>
+<h2 id="emmagatzematge">Emmagatzematge</h2>
+<p>Les aplicacions que s’executen en contenidors poden necessitar algun tipus d’emmagatzematge per a la seva correcta execució, ja sigui només durant l’execució o rebent informació del sistema d’emmagatzematge.</p>
+<h3 id="volums">Volums</h3>
+<p>Per a aquest emmagatzematge es crea un objecte volum anomenat “volum”, que s’executa en el pod i és accessible per tots els contenidors executats en aquest. Però aquest emmagatzematge és temporal, és a dir, la qual cosa s’emmagatzema en un pod només roman durant l’execució del pod.</p>
+<h1 id="section-11"></h1>
+<h3 id="volums-persistents">Volums persistents</h3>
+<p>En canvi, si volem usar emmagatzematge persistent en un pod, s’utilitza un volum de tipus persistent anomenat persistentVolume. Aquest tipus de volums carregaran una ruta de la màquina física i amb una petició de volum anomenada persistentVolumeClaim es munta en l’ordinador. Quan es modifica alguna cosa en aquest volum també es modifica en la màquina física. Pel que, si un node es reinicia continua tenint la informació que va modificar.</p>
+<h1 id="section-12"></h1>
+<h3 id="volums-de-proveïdors-de-núvol">Volums de proveïdors de núvol</h3>
+<p>Tant Amazon com Google i altre, disposen dels seus propis sistemes d’emmagatzematge persistent. Aquests volums només es poden usar en els contenidors de la mateixa zona geogràfica, per la qual cosa és important usar mecanismes com els selectors perquè els pods que vulguin usar aquests volums compleixin amb aquest requisit.</p>
+<ul>
+<li>gcePersistentDisk: Munta un volum Google Computi Engine (GCE) persistent disk en un pod.</li>
+<li>awsElasticBlockStore: Munta un volum AWS EBS Volume en un pod.</li>
+<li>azureDisk: Munta un Microsoft Azure Data Disk en un pod.</li>
+<li>azureFile: Munta un Microsoft Azure File Volume en un pod.</li>
+</ul>
+<h1 id="section-13"></h1>
+<h3 id="serveis">Serveis</h3>
+<p>Quan l’aplicació ja és desplegada en un clúster és important saber com connectar-se a l’aplicació perquè un client pugui realitzar la petició d’un servei. Els serveis exposen l’aplicació de totes les rèpliques existents de manera unificada, utilitzant etiquetes i selectors.</p>
+<ul>
+<li>ClusterIP</li>
+<li>NodePort</li>
+<li>LoadBalancer</li>
+</ul>
+<h1 id="section-14"></h1>
+<h2 id="conclusions">Conclusions</h2>
+<figure>
+<img src="../aux/conclusions.png" alt="" /><figcaption>.</figcaption>
+</figure>
+</body>
+</html>
