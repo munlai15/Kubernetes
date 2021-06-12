@@ -78,7 +78,6 @@ Existeixen objectes dels controladors encarregats que el clúster funcioni corre
 ### Deployment
 És el controlador de desplegaments de contenidors que necessitem per a la nostra aplicació. S'encarrega que aquesta s'executi sobre la base d'unes característiques específiques. Per exemple, el número de pods que volem que s'executin.  
 
-#
 ### ReplicaSet
 És un controlador de rèpliques de pods de l'aplicació desplegada. Aquestes quantitats específiques de rèpliques es vigilen i, en cas que no es compleixin, ReplicaSet s'encarrega de recuperar l'estat desitjat del nombre de rèpliques.  
 
@@ -89,7 +88,6 @@ Les aplicacions que s'executen en contenidors poden necessitar algun tipus d'emm
 ### Volums
 Per a aquest emmagatzematge es crea un objecte volum anomenat "volum", que s'executa en el pod i és accessible per tots els contenidors executats en aquest. Però aquest emmagatzematge és temporal, és a dir, la qual cosa s'emmagatzema en un pod només roman durant l'execució del pod.
 
-#
 ### Volums persistents
 En canvi, si volem usar emmagatzematge persistent en un pod, s'utilitza un volum de tipus persistent anomenat persistentVolume. Aquest tipus de volums carregaran una ruta de la màquina física i amb una petició de volum anomenada persistentVolumeClaim es munta en l'ordinador.
 Quan es modifica alguna cosa en aquest volum també es modifica en la màquina física. Pel que, si un node es reinicia continua tenint la informació que va modificar.
