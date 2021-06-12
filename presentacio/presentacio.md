@@ -39,6 +39,8 @@ Kubernetes distribueix els contenidors en pods, així aquests poden estar en div
 + Node
 + Clúster
 
+![.](../aux/pod.png)
+
 #
 ## Components 
 Perquè l'arquitectura descrita abans funcioni correctament, Kubernetes utilitza diversos components en els diferents elements del seu sistema.
