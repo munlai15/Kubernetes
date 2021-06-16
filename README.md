@@ -56,7 +56,8 @@ Project HISX2 2020-2021 Kubernetes
 
 ### Què és Kubernetes?
 
-Kubernetes és una plataforma portable i extensible de codi obert per a administrar càrregues de treball i serveis. Kubernetes facilita l'automatització i la configuració declarativa. Té un ecosistema gran i en ràpid creixement. El suport, les eines i els serveis per a Kubernetes estan àmpliament disponibles.
+Kubernetes és una plataforma portable i extensible de codi obert per a administrar càrregues de treball i serveis. Realitza la tasca d’orquestrar i gestionar
+contenidors a gran escala. Té un ecosistema gran i en ràpid creixement. El suport, les eines i els serveis per a Kubernetes estan àmpliament disponibles.
 
 Google va alliberar el projecte Kubernetes l'any 2014. Kubernetes es basa en l'experiència de Google corrent aplicacions en producció a gran durant dècada i mitja, al costat de les millors idees i pràctiques de la comunitat.
 
@@ -68,31 +69,49 @@ Kubernetes ofereix un entorn d'administració centrat en contenidors.
 
 ![](https://d33wubrfki0l68.cloudfront.net/e7b766e0175f30ae37f7e0e349b87cfe2034a1ae/3e391/images/docs/why_containers.svg)
 
-*La Manera Antiga* de desplegar aplicacions era instal·lar-les en un servidor usant l'administrador de paquets del sistema operatiu. El desavantatge era que els executables, la configuració, les llibreries i el cicle de vida de tots aquests components s'entreteixien els uns als altres. Podíem construir imatges de màquina virtual immutables per a tenir rollouts i rollbacks predictibles, però les màquines virtuals són pesades i poc portables.
+*La Manera Antiga* de desplegar aplicacions era instal·lar-les en un servidor utilitzant l'administrador de paquets del sistema operatiu. El desavantatge era que els executables, la configuració, les llibreries i el cicle de vida de tots aquests components s'entreteixien els uns als altres. Podíem construir imatges de màquina virtual immutables per a tenir rollouts i rollbacks predictibles, però les màquines virtuals eren i són pesades i poc portables.
 
 *La Manera Nova* és desplegar contenidors basats en virtualització a nivell del sistema operatiu, en comptes del maquinari. Aquests contenidors estan aïllats entre ells i amb el servidor amfitrió: tenen els seus propis sistemes d'arxius, no veuen els processos dels altres i l'ús de recursos pot ser limitat. Són més fàcils de construir que una màquina virtual, i perquè no estan acoblats a la infraestructura i sistema d'arxius de l'amfitrió, poden emportar-se entre núvols i distribucions de sistema operatiu.
 
 
-En resum, els beneficis d'usar contenidors inclouen:
+En resum, els beneficis d'utilitzar contenidors inclouen:
 
 - **Àgil creació i desplegament d'aplicacions:** Major facilitat i eficiència en crear imatges de contenidor en comptes de màquines virtuals.
-- **Desenvolupament, integració i desplegament continu:** Permet que la imatge de contenidor es construeixi i desplegament de manera freqüent i de confiança, facilitant els rollbacks perquè la imatge és immutable.
-- **Separació de tasques entre Dev i Ops:** Pots crear imatges de contenidor al moment de compilar i no en desplegar, desacoblant l'aplicació de la infraestructura.
+- **Desenvolupament, integració i desplegament continu:** Permet que la imatge de contenidor es construeixi i desplegui de manera freqüent, facilitant els rollbacks perquè la imatge és immutable.
+- **Separació de tasques entre Dev i Ops:** Pots crear imatges de contenidors al moment de compilar i no en desplegar, desacoblant l'aplicació de la infraestructura.
 - **Observabilitat:** No solament es presenta la informació i mètriques del sistema operatiu, sinó la salut de l'aplicació i altres senyals.
 - **Consistència entre els entorns de desenvolupament, proves i producció:** L'aplicació funciona igual en un laptop i en el núvol.
 - **Portabilitat entre núvols i distribucions:** Funciona en Ubuntu, RHEL, CoreOS, el teu datacenter físic, Google Kubernetes Engine i tota la resta.
-- **Administració centrada en l'aplicació:** Eleva el nivell d'abstracció del sistema operatiu i el maquinari virtualizado a l'aplicació que funciona en un sistema amb recursos lògics.
+- **Administració centrada en l'aplicació:** Eleva el nivell d'abstracció del sistema operatiu i el maquinari virtualitzat a l'aplicació que funciona en un sistema amb recursos lògics.
 - **Microserveis distribuïts, elàstics, alliberats i feblement acoblats:** Les aplicacions se separen en peces petites i independents que poden ser desplegades i administrades de manera dinàmica, i no com una aplicació monolítica que opera en una sola màquina de gran capacitat.
 - **Aïllament de recursos:** Fa el rendiment de l'aplicació més predictible.
 - **Utilització de recursos:** Permet major eficiència i densitat.
 
 ## Arquitectura de Kubernetes
-Kubernetes distribueix els contenidors en **pods**, així aquests poden estar en diversos **nodes**. Al seu torn, aquests nodes formen un **clúster**, completant així l'estructura que té Kubernetes.
+Kubernetes distribueix els contenidors en **pods**, així aquests poden estar en diversos **nodes**. A la vegada, aquests nodes formen un **clúster**, completant així l'estructura que té Kubernetes.
 
 ### Pods
 En Kubernetes els contenidors s'agrupen en pods, per la qual cosa tots els contenidors que s'executin en un pod ho faran en la mateixa màquina o host, ja que no es poden separar.
 
-S'agrupen en el mateix pod contenidors que usen i necessiten els mateixos recursos. D'aquesta manera dóna la sensació que formen un host lògic dins del clúster, per la qual cosa és més fàcil entendre que el pod tindrà una adreça IP compartida pels contenidors que el formaran. A més, tots els pods s'aconseguiran entre ells, atès que compartiran la mateixa xarxa privada.
+S'agrupen en el mateix pod contenidors que utilitzen i necessiten els mateixos recursos. D'aquesta manera dóna la sensació que formen un host lògic dins del clúster, per la qual cosa és més fàcil entendre que el pod tindrà una adreça IP compartida pels contenidors que el formaran. A més, tots els pods podran establir comunicació entre ells, ja que compartiran la mateixa xarxa privada.
+
+Fitxer d'exemple d'un pod:
+
+```bash
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+  namespace: default
+  labels:
+    app: nginx
+    service: web
+spec:
+  containers:
+    - image: nginx:1.16
+      name: nginx
+      imagePullPolicy: Always
+```
 
 ### Nodes
 
@@ -100,7 +119,7 @@ Les aplicacions que s'executin en el clúster (conjunt de nodes), realment s'est
 
 Aquests nodes poden ser tant un ordinador, com una màquina virtual o fins i tot una màquina en el núvol. Aquests estan administrats per un component anomenat Kubelet, que veurem més endavant.
 
-Els nodes poden ser de dos tipus: els nodes treballadors i els nodes mestres. La diferència que existeix és que els nodes mestres Kubernetes els utilitza per a labors d'administració i planificació dels pods que s'executen en els nodes treballadors del clúster. Aquesta administració i control es realitza a través de diferents controladors que veurem més endavant.
+Els nodes poden ser de dos tipus: els nodes treballadors i els nodes mestres. La diferència que existeix és que els nodes mestres Kubernetes els utilitza per a tasques d'administració i planificació dels pods que s'executen en els nodes treballadors del clúster. Aquesta administració i control es realitza a través de diferents controladors que veurem més endavant.
 
 Normalment es disposa d'un únic node màster, però en funció de la càrrega de treball, podríem disposar de diversos nodes màster, fent així el sistema més resistent davant fallades.
 
@@ -156,17 +175,17 @@ Cal tenir en compte que Kubelet no administra contenidors que no pertanyen a Kub
 
 **Kube-proxy**
 
-S'executa en cada node i proporciona abstracció de serveis en realitzar la reexpedició de connexió. Així, quan arriba una petició de servei a un node per part d'un usuari des de l'exterior, a un node on no s'està executant algun pod de l'aplicació que s'encarrega d'ells, kube-proxy s'ocupa de fer que la connexió es reencíe al node correcte.
+S'executa en cada node i proporciona abstracció de serveis en realitzar la reexpedició de connexió. És a dir, quan arriba una petició de servei a un node per part d'un usuari des de l'exterior, a un node on no s'està executant algun pod de l'aplicació que s'encarrega d'ells, kube-proxy s'ocupa de fer que la connexió vagi al node correcte.
 
 **cAdvisor**
 
-Es dedica a recollir informació de l'ús dels recursos que s'usen en els nodes vigilant la CPU, la memòria, sistemes de fitxers i l'ús de la xarxa. La informació recollida s'usa per a informar el node mestre.
+Es dedica a recollir informació de l'ús dels recursos que s'utilitzen en els nodes vigilant la CPU, la memòria, sistemes de fitxers i l'ús de la xarxa. La informació recollida s'utilitza per a informar el node mestre.
 
 ### Complements dels nodes
 
 Els complements doten a l'estructura del clúster de funcionalitats addicionals, que encara no està disponibles per defecte en Kubernetes, però que es poden implementar a través de tercers:
 
-* DNS: Malgrat ser un complement, la seva funcionalitat és necessària per al correcte funcionament del clúster. Serà usat per kube-proxy, per a reexpedir la informació.
+* DNS: Malgrat ser un complement, la seva funcionalitat és necessària per al correcte funcionament del clúster. Serà utilitzar per kube-proxy, per a reexpedir la informació.
 
 * Dashboard: Una interfície web destinada a l'usuari amb finalitats d'administració del clúster.
 
@@ -176,7 +195,7 @@ En la següent imatge es mostra l'estructura completa de l'arquitectura amb els 
 
 ## Etiquetes
 
-Estan definides en els objectes i són una dupla de clau i valor separats per dos punts, és a dir, amb la forma "clau:valor". S'usen per a la gestió dels objectes per part dels controladors del clúster.
+Estan definides en els objectes i són una dupla de clau i valor separats per dos punts, és a dir, amb la forma "clau:valor". S'utilitzen per a la gestió dels objectes per part dels controladors del clúster.
 
 Cal tenir en compte que una etiqueta ha de ser única en un objecte però pot tenir diversos valors, fins i tot estar buit.
 
@@ -249,9 +268,56 @@ Existeixen objectes dels controladors encarregats que el clúster funcioni corre
 
 És el controlador de desplegaments de contenidors que necessitem per a la nostra aplicació. S'encarrega que aquesta s'executi sobre la base d'unes característiques específiques. Per exemple, el número de pods que volem que s'executin.
 
+Fitxer d'exemple d'un deployment:
+
+```bash
+apiVersion: apps/v1 
+kind: Deployment
+metadata:
+  name: nginx-deployment
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.7.9
+        ports:
+        - containerPort: 80
+```
+
 ### ReplicaSet
 
 És un controlador de rèpliques de pods de l'aplicació desplegada. Aquestes quantitats específiques de rèpliques es vigilen i, en cas que no es compleixin, ReplicaSet s'encarrega de recuperar l'estat desitjat del nombre de rèpliques. Per exemple, si hem especificat que volem tres rèpliques d'un pod i un dels nodes del clúster deixa de funcionar, ReplicaSet s'encarregarà de sol·licitar la creació de nous pods que s'allotjaran en altres nodes per a així continuar mantenint la configuració desitjada.
+
+Fitxer d'exemple d'un replicaset:
+
+```bash
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: nginx
+  namespace: default
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+        - image:  nginx
+          name:  nginx
+```
 
 ## Emmagatzematge
 
@@ -259,17 +325,55 @@ Les aplicacions que s'executen en contenidors poden necessitar algun tipus d'emm
 
 ### Volums
 
-Per a aquest emmagatzematge es crea un objecte volum anomenat "volum", que s'executa en el pod i és accessible per tots els contenidors executats en aquest. Però aquest emmagatzematge és temporal, és a dir, la qual cosa s'emmagatzema en un pod només roman durant l'execució del pod. Pel que, si tant un pod com un node que executa aquest pod deixa de funcionar, Kubernetes pot llançar un altre pod per a reposar el servei, però el volum torna a tenir la informació especificada en la configuració de l'aplicació que estem desplegant, no de l'anterior.
+Per a aquest emmagatzematge es crea un objecte volum anomenat "volum", que s'executa en el pod i és accessible per tots els contenidors executats en aquest. Però aquest emmagatzematge és temporal, és a dir, qualssevol cosa que s'emmagatzema en un pod només romandrà durant l'execució del pod. Pel que, si tant un pod com un node que executa aquest pod deixa de funcionar, Kubernetes pot llançar un altre pod per a reposar el servei, però el volum torna a tenir la informació especificada en la configuració de l'aplicació que estem desplegant, no de l'anterior.
 
 * EmptyDir: Munta un volum buit en el pod del contenidor en la ruta especificada en la configuració del contenidor amb l'etiqueta "emptyDir".
 
+Exemple de configuració d'EmptyDir:
+
+```bash
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test-pd
+spec:
+  containers:
+  - image: k8s.gcr.io/test-webserver
+    name: test-container
+    volumeMounts:
+    - mountPath: /cache
+      name: cache-volume
+  volumes:
+  - name: cache-volume
+    emptyDir: {}
+```
+
 ### Volums persistents
 
-En canvi, si volem usar emmagatzematge persistent en un pod, s'utilitza un volum de tipus persistent anomenat *persistentVolume*. Aquest tipus de volums carregaran una ruta de la màquina física i amb una petició de volum anomenada *persistentVolumeClaim* es munta en l'ordinador.
+En canvi, si volem utilitzar emmagatzematge persistent en un pod, s'utilitza un volum de tipus persistent anomenat *persistentVolume*. Aquest tipus de volums carregaran una ruta de la màquina física i amb una petició de volum anomenada *persistentVolumeClaim* es munta en l'ordinador.
 
 Quan es modifica alguna cosa en aquest volum també es modifica en la màquina física. Pel que, si un node es reinicia continua tenint la informació que va modificar.
 
 * HostPath: Munta una ruta del sistema de fitxers del node en la ruta indicada en la configuració del contenidor. Aquesta informació es dóna com a valor de la etquieta "path" que estarà niada sota l'etiqueta "hostPath".
+
+Exemple de configuració d'un volum persistent amb HostPath:  
+
+```bash
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: task-pv-volume
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/data"
+ ```
 
 ### Volums de proveïdors de núvol
 
@@ -281,7 +385,29 @@ Tant Amazon com Google i altre, disposen dels seus propis sistemes d'emmagatzema
 
 * azureDisk: Munta un Microsoft Azure Data Disk en un pod.
 
-* azureFile: Munta un Microsoft Azure File Volume en un pod.
+* azureFile: Munta un Microsoft Azure File Volume en un pod.  
+
+Exemple de configuració d'awsElasticBlockStore:  
+
+```bash
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test-ebs
+spec:
+  containers:
+  - image: k8s.gcr.io/test-webserver
+    name: test-container
+    volumeMounts:
+    - mountPath: /test-ebs
+      name: test-volume
+  volumes:
+  - name: test-volume
+    # This AWS EBS volume must already exist.
+    awsElasticBlockStore:
+      volumeID: "<volume id>"
+      fsType: ext4
+```
 
 ## Serveis
 
@@ -289,13 +415,13 @@ Quan l'aplicació ja és desplegada en un clúster és important saber com conne
 
 ### Tipus de serveis
 
-* ClusterIP: Defineix el servei assignant una IP interna de clúster, per la qual cosa només es pot accedir al servei des del propi clúster. D'aquesta manera no cal preocupar-se de les variacions de les adreces IP dels nodes del clúster que es puguin donar per substitució de nodes o reassignació d'adreces.
+* ClusterIP: Defineix el servei assignant una IP interna de clúster, pel que només es pot accedir al servei des del propi clúster. D'aquesta manera no cal preocupar-se de les variacions de les adreces IP dels nodes del clúster que es puguin donar per substitució de nodes o reassignació d'adreces.
 
-* NodePort: Assigna el mateix port en cada node per a cada servei, així amb NodeIP (IP del node) i NodePort (port assignat per al servei) es pot accedir al servei des de fora del clúster. *Kube-proxy* s'encarregarà de enrutar el trànsit, usant el servei DNS, al node correcte.
+* NodePort: Assigna el mateix port en cada node per a cada servei, així amb NodeIP (IP del node) i NodePort (port assignat per al servei) es pot accedir al servei des de fora del clúster. *Kube-proxy* s'encarregarà de enrutar el trànsit, utilitzant el servei DNS, al node correcte.
 
 Perquè l'usuari que accedeixi als serveis no tingui la necessitat de conèixer totes les adreces IP, es pot crear un balanceador de càrrega extern.
 
-* LoadBalancer: Si usem un proveïdor de serveis en núvol per al nostre clúster de Kubernetes no necessitem crear un balanceador de càrrega, ja que la majoria dels proveïdors tenen plugins per a aquesta tasca. A aquests serveis es denominen de tipus *LoadBalancer* i creen una IP fixa i externa al servei perquè el balanceador s'encarregui d'encaminar el trànsit.
+* LoadBalancer: Si utilitzem un proveïdor de serveis en núvol per al nostre clúster de Kubernetes no necessitem crear un balanceador de càrrega, ja que la majoria dels proveïdors tenen plugins per a aquesta tasca. A aquests serveis es denominen de tipus *LoadBalancer* i creen una IP fixa i externa al servei perquè el balanceador s'encarregui d'encaminar el trànsit.
 
 ## Networking
 
